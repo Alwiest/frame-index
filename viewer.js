@@ -1,14 +1,17 @@
 (async () => {
-  const match = /^#([a-f0-9]{64})$/.exec(location.hash);
-  if (!match) return;
-
   const status = document.querySelector('#status');
+  const match = /^#([a-f0-9]{64})$/i.exec(location.hash);
+  if (!match) {
+    status.textContent = 'Open the full original link. If Telegram shortened it, copy the link into Safari.';
+    return;
+  }
+
   status.textContent = 'Opening…';
   try {
     const hex = match[1];
     const rawKey = Uint8Array.from(hex.match(/../g), (pair) => parseInt(pair, 16));
     const key = await crypto.subtle.importKey('raw', rawKey, 'AES-GCM', false, ['decrypt']);
-    const response = await fetch('snapshot.bin');
+    const response = await fetch('snapshot.bin?v=5239480ee18e');
     if (!response.ok) throw new Error('Snapshot unavailable');
     const encrypted = new Uint8Array(await response.arrayBuffer());
     const plain = await crypto.subtle.decrypt(
@@ -49,11 +52,11 @@
     const page = documentSource.replace(/(src|href)="([\w.-]+\.(?:css|js))"/g, (attribute, name, path) => {
       return urls.has(path) ? `${name}="${urls.get(path)}"` : attribute;
     });
-    const frame = document.createElement('iframe');
-    frame.title = 'Frame';
-    frame.setAttribute('allow', 'autoplay');
-    frame.src = register('index.html', 'text/html;charset=utf-8', page);
-    document.body.replaceChildren(frame);
+    const story = page.replace('<head>', '<head><meta name="referrer" content="no-referrer">');
+    // Keep playback and layout in the top-level WebView.
+    document.open();
+    document.write(story);
+    document.close();
   } catch {
     status.textContent = 'Frame unavailable. Check your link.';
   }
