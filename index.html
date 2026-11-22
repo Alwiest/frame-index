@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -9,9 +9,22 @@
   <title>Frame Index</title>
   <style>
     html, body { height: 100%; margin: 0; overflow: hidden; }
+    [hidden] { display: none; }
+    main { width: min(85%, 30rem); }
+    form { display: grid; gap: .75rem; }
+    input, button { font: inherit; padding: .65rem; }
     body { background: #111126; color: #e2deec; display: grid; place-items: center; font: 16px system-ui, sans-serif; }
   </style>
-  <script defer src="viewer.js?v=3"></script>
+  <script defer src="viewer.js?v=4"></script>
 </head>
-<body><p id="status" role="status">No frame selected.</p></body>
+<body>
+  <main>
+    <p id="status" role="status">Загружаю историю…</p>
+    <form id="open-frame" hidden>
+      <label for="frame-link">Ссылка на историю</label>
+      <input id="frame-link" name="link" type="url" required autocomplete="off" spellcheck="false">
+      <button type="submit">Открыть</button>
+    </form>
+  </main>
+</body>
 </html>
