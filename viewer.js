@@ -18,7 +18,7 @@
 
       const rawKey = Uint8Array.from(hex.match(/../g), (pair) => parseInt(pair, 16));
       const key = await crypto.subtle.importKey('raw', rawKey, 'AES-GCM', false, ['decrypt']);
-      const response = await fetch('snapshot.bin?v=3b119fadd12d');
+      const response = await fetch('snapshot.bin?v=ef6eabe20fe2');
       if (!response.ok) throw new Error('Snapshot unavailable');
 
       const encrypted = new Uint8Array(await response.arrayBuffer());
